@@ -1,4 +1,5 @@
-![Uploading download.png…]()
+<img width="2999" height="1892" alt="download" src="https://github.com/user-attachments/assets/2e9c3f62-71c7-4b47-8a48-af12a5e947ab" />
+
 # Welcome to your Expo app 👋
 
 This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
