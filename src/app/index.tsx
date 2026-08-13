@@ -47,7 +47,13 @@ export default function MedievalCamera() {
             Alert.alert('Portrait Captured!', `Thy visage is saved:\n${photo.uri}`);
         }
       } catch (error) {
-        console.error(error);
+        // แทนที่จะเขียน console.error(error) ซึ่งทำให้จอแดง
+        // ให้เปลี่ยนมาเป็น console.log และแจ้งเตือนผู้ใช้สวยๆ แทนครับ
+        console.log("Camera error on web:", error);
+        Alert.alert(
+          'Magic Mirror warming up...', 
+          'ไม่สามารถถ่ายภาพบนเว็บเบราว์เซอร์ได้ กรุณาทดสอบผ่านมือถือจริงด้วยแอป Expo Go ครับ'
+        );
       }
     }
   };
