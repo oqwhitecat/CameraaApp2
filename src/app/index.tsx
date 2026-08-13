@@ -4,12 +4,8 @@ import { Alert, SafeAreaView, StatusBar, StyleSheet, Text, TouchableOpacity, Vie
 
 export default function MedievalCamera() {
   const [permission, requestPermission] = useCameraPermissions();
-  
-  // แก้ Error 1: กำหนด Type เป็น 'back' หรือ 'front' ให้ชัดเจน
   const [facing, setFacing] = useState<CameraType>('back');
   const [activeFilter, setActiveFilter] = useState('normal');
-  
-  // แก้ Error 2: ใส่ Type <CameraView> ให้ useRef เพื่อให้มันรู้จักคำสั่ง takePictureAsync
   const cameraRef = useRef<CameraView>(null);
 
   const filters = [
@@ -18,18 +14,23 @@ export default function MedievalCamera() {
     { id: 'vivid', name: 'Enchanted\n(สดใส)', overlayColor: 'rgba(255, 180, 50, 0.25)' }, 
   ];
 
-  if (!permission) {
-    return <View style={styles.container} />;
-  }
-
-  if (!permission.granted) {
+  // หน้าจอขอสิทธิ์เข้าถึงกล้อง
+  if (!permission?.granted) {
     return (
       <View style={styles.permissionContainer}>
-        <Text style={styles.titleText}>Ye Olde Camera</Text>
-        <Text style={styles.permissionText}>Halt! Thy must grant permission to use the magic mirror (camera).</Text>
-        <TouchableOpacity style={styles.scrollButton} onPress={requestPermission}>
-          <Text style={styles.scrollButtonText}>Grant Permission</Text>
-        </TouchableOpacity>
+        <View style={styles.permissionCard}>
+          <Text style={styles.titleText}>Ye Olde Camera</Text>
+          <Text style={styles.permissionText}>Halt! Thy must grant permission to use the magic mirror (camera).</Text>
+          <TouchableOpacity style={styles.scrollButton} onPress={requestPermission}>
+            <Text style={styles.scrollButtonText}>Grant Permission</Text>
+          </TouchableOpacity>
+        </View>
+        
+        {/* เครดิตผู้สร้างหน้าขอสิทธิ์ */}
+        <View style={styles.creditContainer}>
+          <Text style={styles.creditText}>Crafted by Sir Tatpong</Text>
+          <Text style={styles.creditTextSmall}>ID: 663450039-7 | tatpong.p@kkumail.com</Text>
+        </View>
       </View>
     );
   }
@@ -42,7 +43,6 @@ export default function MedievalCamera() {
     if (cameraRef.current) {
       try {
         const photo = await cameraRef.current.takePictureAsync();
-        // TypeScript อาจจะฟ้องนิดหน่อยเรื่อง photo.uri เลยต้องเช็คก่อน
         if (photo && photo.uri) {
             Alert.alert('Portrait Captured!', `Thy visage is saved:\n${photo.uri}`);
         }
@@ -106,6 +106,11 @@ export default function MedievalCamera() {
 
           <View style={[styles.brassButton, { opacity: 0 }]} />
         </View>
+
+        {/* เครดิตผู้สร้างหน้ากล้อง */}
+        <View style={styles.creditContainerCamera}>
+          <Text style={styles.creditText}>Crafted by Sir Tatpong (663450039-7)</Text>
+        </View>
       </View>
     </SafeAreaView>
   );
@@ -122,6 +127,14 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     padding: 20,
+  },
+  permissionCard: {
+    backgroundColor: '#2C1A0D',
+    padding: 30,
+    borderRadius: 10,
+    borderWidth: 2,
+    borderColor: '#8B6508',
+    alignItems: 'center',
   },
   topBar: {
     paddingVertical: 15,
@@ -148,7 +161,6 @@ const styles = StyleSheet.create({
   camera: {
     flex: 1,
   },
-  // แก้ Error 3: เปลี่ยน absoluteFillObject เป็น absoluteFill (ตามที่ VS Code แนะนำ)
   overlay: {
     ...StyleSheet.absoluteFill as any, 
   },
@@ -159,7 +171,7 @@ const styles = StyleSheet.create({
     opacity: 0.5,
   },
   controlsContainer: {
-    paddingBottom: 40,
+    paddingBottom: 20,
     paddingTop: 20,
     backgroundColor: '#2C1A0D', 
     borderTopWidth: 4,
@@ -204,6 +216,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingHorizontal: 30,
+    marginBottom: 10,
   },
   brassButton: {
     width: 65,
@@ -253,7 +266,7 @@ const styles = StyleSheet.create({
     marginVertical: 20,
     fontSize: 16,
     fontFamily: 'serif',
-    paddingHorizontal: 20,
+    paddingHorizontal: 10,
   },
   scrollButton: {
     backgroundColor: '#8B6508',
@@ -268,5 +281,28 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 16,
     fontFamily: 'serif',
+  },
+  // สไตล์สำหรับเครดิต
+  creditContainer: {
+    position: 'absolute',
+    bottom: 40,
+    alignItems: 'center',
+  },
+  creditContainerCamera: {
+    alignItems: 'center',
+    marginTop: 15,
+  },
+  creditText: {
+    color: '#D4AF37', // สีทอง
+    fontFamily: 'serif',
+    fontSize: 12,
+    opacity: 0.8,
+  },
+  creditTextSmall: {
+    color: '#8B6508', // สีทองเหลือง
+    fontFamily: 'serif',
+    fontSize: 10,
+    marginTop: 4,
+    opacity: 0.6,
   }
 });
